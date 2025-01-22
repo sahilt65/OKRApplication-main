@@ -29,6 +29,9 @@ const CreateOkrForm = ({
     setKeyResults([...keyResults]);
   }
 
+
+
+
   const addKeyResult = () => {
     setKeyResults([
       ...keyResults,
@@ -74,6 +77,7 @@ const CreateOkrForm = ({
                   onChange={(e) => {
                     handleChange("title", e.target.value, index)
                   }}
+                  key={index}
                 />
                 <div className="flex space-x-3">
                   <input
@@ -108,6 +112,7 @@ const CreateOkrForm = ({
                   onChange={(e) => {
                     handleChange("metrics", e.target.value, index)
                   }}
+
                 />
               </>
             );
