@@ -5,7 +5,7 @@ import * as React from "react";
 type AddKeyResultModalProps = {
   isOpen: boolean,
   objective: ObjectiveType,
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[]>>,
+  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[]|null>>,
   objectives: ObjectiveType[],
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -36,8 +36,11 @@ export function AddKeyResultModal({isOpen, objective, setObjectives, objectives,
   };
 
   function handleChange(key: string, input: string | number) {
-    newKeyResult[key] = input;
-    setNewKeyResult(newKeyResult);
+    const newKeyResultToBeAdded = {
+      ...newKeyResult, [key]: input,
+    };
+
+    setNewKeyResult(newKeyResultToBeAdded);
   }
 
   return (

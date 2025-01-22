@@ -3,7 +3,7 @@ import {KeyResultType, ObjectiveType} from "../Types/OKRTypes.ts";
 
 type CreateOkrFormProps = {
   objectives: ObjectiveType[]
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[]>>,
+  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[]|null>>,
 }
 
 const CreateOkrForm = ({

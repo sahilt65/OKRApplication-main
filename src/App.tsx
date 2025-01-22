@@ -6,21 +6,21 @@ import getOKRData from "./OKR-store/OKR-Data.ts";
 
 
 function App() {
-  const [objectives, setObjectives] = useState<ObjectiveType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [objectives, setObjectives] = useState<ObjectiveType[] | null>(null);
+
+  const isLoading = objectives===null;
 
   useEffect(() => {
     (async () => {
       const initialOKRData: ObjectiveType[] = await getOKRData();
       setObjectives(initialOKRData);
-      setIsLoading(false);
     })();
   }, [])
 
   return (
     <div>
       <CreateOkrForm
-        objectives={objectives}
+        objectives={objectives??[]}
         setObjectives={setObjectives}
       />
       {isLoading ? (<p>Loading...</p>) : (<ShowOKRs
