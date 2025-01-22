@@ -1,7 +1,13 @@
 import {ObjectiveType} from "../Types/OKRTypes.ts";
 
-const initialObjectives: ObjectiveType[] = [
+type InitialObjectivesType = ObjectiveType & {
+  id : number
+}
+const db = new Map<number, InitialObjectivesType>()
+let dbIndex = 0;
+const initialObjectives: InitialObjectivesType[] = [
   {
+    id:dbIndex++,
     title: "Build Team",
     keyResults: [
       {
@@ -21,6 +27,7 @@ const initialObjectives: ObjectiveType[] = [
     ]
   },
   {
+    id:dbIndex++,
     title: "Sale the Product",
     keyResults: [
       {
@@ -34,10 +41,34 @@ const initialObjectives: ObjectiveType[] = [
   }
 ]
 
-export default function getOKRData():Promise<ObjectiveType[]>{
+initialObjectives.forEach((objective: InitialObjectivesType)=>{
+    console.log(db.values())
+  db.set(objective.id, objective);
+})
+
+
+function getOKRData():Promise<ObjectiveType[]>{
   return new Promise((resolve)=>{
     setTimeout(()=>{
-      resolve(initialObjectives);
+      resolve(Array.from(db.values()));
     },3000)
   })
 }
+
+function insertOKRData(objective:ObjectiveType):Promise<void>{
+  return new Promise((resolve)=>{
+
+    const objectiveToBeAdded:InitialObjectivesType = {
+      id:dbIndex++,
+      title:objective.title,
+      keyResults:objective.keyResults
+    }
+    setTimeout(()=>{
+      db.set(dbIndex++, objectiveToBeAdded);
+      resolve();
+    },3000)
+    console.log(objectiveToBeAdded);
+  })
+}
+
+export{getOKRData,insertOKRData}
