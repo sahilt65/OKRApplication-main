@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState} from "react";
 
 type KeyResultType = {
   title: string;
@@ -10,7 +10,7 @@ type KeyResultType = {
 
 type ObjectiveType = {
   title: string;
-  keyResults: KeyResultType[];
+  keyResults: KeyResultType[ ];
 };
 
 function App() {
@@ -26,6 +26,20 @@ function App() {
         keyResults: keyResults,
       },
     ]);
+  }
+
+  function handleChange(key: string, input: string | number, index: number) {
+    const keyResultToUpdate = keyResults[index];
+    keyResults[index] = {...keyResultToUpdate, [key]: input};
+    setKeyResults([...keyResults]);
+  }
+
+  function deleteKeyResult(objIndex:number, keyResultIndex: number){
+    const keyResultToDelete = objectives[objIndex].keyResults[keyResultIndex];
+    const keyResultTemp = objectives[objIndex].keyResults.filter(key => key != keyResultToDelete);
+    objectives[objIndex].keyResults = keyResultTemp;
+    console.log(keyResultTemp);
+    setObjectives([...objectives]);
   }
 
   const addKeyResult = () => {
@@ -73,8 +87,10 @@ function App() {
                     id="keyresults"
                     placeholder="Key Result Title"
                     onChange={(e) => {
-                      keyResult.title = e.target.value;
-                      setKeyResults([...keyResults]);
+                      // keyResult.title = e.target.value;
+                      // setKeyResults([...keyResults]);
+
+                      handleChange("title", e.target.value, index)
                     }}
                   />
                   <div className="flex space-x-3">
@@ -83,8 +99,8 @@ function App() {
                       type="text"
                       placeholder="Initial Value"
                       onChange={(e) => {
-                        keyResult.initialValue = parseInt(e.target.value);
-                        setKeyResults([...keyResults]);
+                        handleChange("initialValue", e.target.value, index)
+
                       }}
                     />
                     <input
@@ -92,8 +108,8 @@ function App() {
                       type="text"
                       placeholder="Current Value"
                       onChange={(e) => {
-                        keyResult.currentValue = parseInt(e.target.value);
-                        setKeyResults([...keyResults]);
+                        handleChange("currentValue", e.target.value, index)
+
                       }}
                     />
                     <input
@@ -101,8 +117,8 @@ function App() {
                       type="text"
                       placeholder="Target Value"
                       onChange={(e) => {
-                        keyResult.targetValue = parseInt(e.target.value);
-                        setKeyResults([...keyResults]);
+                        handleChange("targetValue", e.target.value, index)
+
                       }}
                     />
                   </div>
@@ -111,8 +127,8 @@ function App() {
                     type="text"
                     placeholder="Metrics"
                     onChange={(e) => {
-                      keyResult.metrics = e.target.value;
-                      setKeyResults([...keyResults]);
+                      handleChange("metrics", e.target.value, index)
+
                     }}
                   />
                 </>
@@ -150,38 +166,28 @@ function App() {
 
                   <div className=" px-16 py-4">
                     <div className="font-medium text-lg">Key Results</div>
-                    <table>
-                      <th className="">
-                          <td>
-                            title
-                          </td>
-                          <td>
-                          Intitial Value
-                          </td>
-                          <td>
-                          Current Value
-                          </td>
-                          <td>
-                          Target Value
-                          </td>
-                          <td>
-                          Metrics
-                          </td>
-                      </th>
-                      {objective.keyResults.map((kr, i) => {
-                        return (
-                          <tr>
 
-<td>{kr.title}</td>
-                            <td>{kr.initialValue}</td>
-                            <td>{kr.currentValue}</td>
-                            <td>{kr.targetValue}</td>
-                            <td>{kr.metrics}</td>
-                          </tr>
-                            
-                        );
-                      })}
-                    </table>
+                    {objective.keyResults.map((kr, i) => {
+                      return (
+                        <div className="pl-4">
+                          <span className="flex justify-between">
+                            <h1>{kr.title}</h1>
+                            <button className="border bg-red-500 hover:bg-red-600 rounded-md px-2 text-white"
+                            onClick={() => {deleteKeyResult(index,i)}}>
+                              Delete
+                            </button>
+                          </span>
+
+
+                          <span className="flex justify-between">
+                            <p>Initial: {kr.initialValue}</p>
+                            <p>Current: {kr.currentValue}</p>
+                            <p>Target: {kr.targetValue}</p>
+                            <p>Metrics: {kr.metrics}</p>
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </>
