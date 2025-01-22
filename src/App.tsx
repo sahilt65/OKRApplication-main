@@ -1,17 +1,5 @@
 import {useState} from "react";
-
-type KeyResultType = {
-  title: string;
-  initialValue: number;
-  currentValue: number;
-  targetValue: number;
-  metrics: string;
-};
-
-type ObjectiveType = {
-  title: string;
-  keyResults: KeyResultType[ ];
-};
+import {KeyResultType, ObjectiveType} from "./Types/OKRTypes.ts";
 
 function App() {
   const [objectives, setObjectives] = useState<ObjectiveType[]>([]);
