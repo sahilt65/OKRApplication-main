@@ -1,7 +1,16 @@
 import {useState} from "react";
-import {KeyResultType} from "../Types/OKRTypes.ts";
+import {KeyResultType, ObjectiveType} from "../Types/OKRTypes.ts";
+import * as React from "react";
 
-export function AddKeyResultModal({isOpen, objective, setObjectives, objectives, setIsOpen}) {
+type AddKeyResultModalProps = {
+  isOpen: boolean,
+  objective: ObjectiveType,
+  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[]>>,
+  objectives: ObjectiveType[],
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export function AddKeyResultModal({isOpen, objective, setObjectives, objectives, setIsOpen}:AddKeyResultModalProps) {
   const [newKeyResult, setNewKeyResult] = useState<KeyResultType>(
     {
       title: "string",
@@ -13,7 +22,7 @@ export function AddKeyResultModal({isOpen, objective, setObjectives, objectives,
   );
 
   const addKeyResult = () => {
-    objectives.map((key) => {
+    objectives.map((key: ObjectiveType) => {
       if (key === objective) {
         console.log(key);
         key.keyResults.push(newKeyResult);
@@ -89,6 +98,7 @@ export function AddKeyResultModal({isOpen, objective, setObjectives, objectives,
                   className="bg-blue-400 px-2 py-1 rounded-md text-white    hover:bg-blue-600 mr-6 block items-end"
                   onClick={() => {
                     addKeyResult()
+                    setIsOpen(false);
                   }}
                 >
                   Add Key Result

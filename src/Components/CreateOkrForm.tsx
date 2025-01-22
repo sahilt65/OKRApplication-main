@@ -21,6 +21,8 @@ const CreateOkrForm = ({
         keyResults: keyResults,
       },
     ]);
+
+    setKeyResults([]);
   }
 
   function handleChange(key: string, input: string | number, index: number) {
@@ -43,6 +45,8 @@ const CreateOkrForm = ({
         metrics: "string",
       },
     ]);
+
+
   };
   return (
     <div className=" px-4 mx-24 mt-12">
