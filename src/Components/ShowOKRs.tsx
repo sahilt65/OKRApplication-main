@@ -1,27 +1,20 @@
 import {ObjectiveType} from "../Types/OKRTypes.ts";
-import * as React from "react";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {AddKeyResultModal} from "./AddKeyResultModal.tsx";
 import {deleteKeyResultWithId, deleteObjectiveFromDb} from "../OKR-store/OKR-Data.ts";
+import {okrProviderContext} from "../providers/OKRProvider.tsx";
 
-type ShowOKRsProps = {
-  objectives: ObjectiveType[];
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>;
-};
 
-export function ShowOKRs({
-                           objectives,
-                           setObjectives,
-                         }: ShowOKRsProps) {
+export function ShowOKRs() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentObjective, setCurrentObjective] = useState<ObjectiveType>();
-
+  const {objectives, setObjectives} = useContext(okrProviderContext);
   async function deleteKeyResult(objIndex: number, keyResultIndex: number, id: number) {
-    const keyResultToDelete = objectives[objIndex].keyResults[keyResultIndex];
-    objectives[objIndex].keyResults = objectives[objIndex].keyResults.filter(
+    const keyResultToDelete = objectives![objIndex].keyResults[keyResultIndex];
+    objectives![objIndex].keyResults = objectives![objIndex].keyResults.filter(
       (key) => key != keyResultToDelete
     );
-    setObjectives([...objectives]);
+    setObjectives([...objectives!]);
     try {
       await deleteKeyResultWithId(id)
     } catch (e) {
@@ -30,7 +23,7 @@ export function ShowOKRs({
   }
 
   async function deleteObjective(objective: ObjectiveType) {
-    const objectivesTemp = objectives.filter((key) => key != objective);
+    const objectivesTemp = objectives!.filter((key) => key != objective);
     setObjectives([...objectivesTemp]);
     try {
       await deleteObjectiveFromDb(objective.id);
@@ -42,8 +35,8 @@ export function ShowOKRs({
   return (
     <div>
       <div className="px-4 space-y-4 mx-24">
-        {objectives.length > 0 ? (
-          objectives.map((objective, index) => {
+        {objectives!.length > 0 ? (
+          objectives!.map((objective, index) => {
             return (
               <div
                 key={objective.id}
@@ -136,9 +129,7 @@ export function ShowOKRs({
       {currentObjective && (
         <AddKeyResultModal
           isOpen={isOpen}
-          setObjectives={setObjectives}
           objective={currentObjective}
-          objectives={objectives}
           setIsOpen={setIsOpen}
         />
       )}

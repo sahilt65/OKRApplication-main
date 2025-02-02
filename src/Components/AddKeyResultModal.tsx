@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useContext} from "react";
 import { KeyResultType, ObjectiveType } from "../Types/OKRTypes.ts";
 import * as React from "react";
 import { insertKeyResult } from "../OKR-store/OKR-Data.ts";
+import {okrProviderContext} from "../providers/OKRProvider.tsx";
 
 type AddKeyResultModalProps = {
   isOpen: boolean;
   objective: ObjectiveType;
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>;
-  objectives: ObjectiveType[];
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function AddKeyResultModal({ isOpen, objective, setObjectives, objectives, setIsOpen }: AddKeyResultModalProps) {
+export function AddKeyResultModal({ isOpen, objective,setIsOpen }: AddKeyResultModalProps) {
   const [newKeyResult, setNewKeyResult] = useState<KeyResultType>({
     id: 1,
     title: "string",
@@ -20,7 +19,7 @@ export function AddKeyResultModal({ isOpen, objective, setObjectives, objectives
     targetValue: 1,
     metrics: "string",
   });
-
+  const {objectives, setObjectives} = useContext(okrProviderContext);
   // Function to handle Enter (Add Key Result) and Escape (Close Modal)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -44,7 +43,7 @@ export function AddKeyResultModal({ isOpen, objective, setObjectives, objectives
   const addKeyResult = async () => {
     try {
       await insertKeyResult(newKeyResult, objective.id).then((kr) => {
-        objectives.map((key: ObjectiveType) => {
+        objectives!.map((key: ObjectiveType) => {
           if (key === objective) {
             key.keyResults.push({...newKeyResult, id:kr.id});
           }
@@ -55,7 +54,7 @@ export function AddKeyResultModal({ isOpen, objective, setObjectives, objectives
     }
 
 
-    setObjectives([...objectives]);
+    setObjectives([...objectives!]);
 
 
   };

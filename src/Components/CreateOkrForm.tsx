@@ -1,26 +1,20 @@
-import {useState} from "react";
-import {KeyResultType, ObjectiveType} from "../Types/OKRTypes.ts";
+import {useContext, useState} from "react";
+import {KeyResultType} from "../Types/OKRTypes.ts";
 import {insertOKRData} from "../OKR-store/OKR-Data.ts";
-import * as React from "react";
+import {okrProviderContext} from "../providers/OKRProvider.tsx";
 
-type CreateOkrFormProps = {
-  objectives: ObjectiveType[]
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>,
-}
 
-const CreateOkrForm = ({
-                         objectives,
-                         setObjectives,
-                       }: CreateOkrFormProps) => {
+const CreateOkrForm = () => {
   const [newObjective, setNewObjective] = useState<string>("");
   const [keyResults, setKeyResults] = useState<KeyResultType[]>([]);
+  const {objectives, setObjectives} = useContext(okrProviderContext);
 
   async function addObjective() {
 
     try {
       await insertOKRData(newObjective).then((value) => {
         setObjectives([
-          ...objectives,
+          ...objectives!,
           {
             id: value.id,
             title: newObjective,
