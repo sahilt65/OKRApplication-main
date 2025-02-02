@@ -1,74 +1,99 @@
-import {ObjectiveType} from "../Types/OKRTypes.ts";
+import {KeyResultType, ObjectiveType} from "../Types/OKRTypes.ts";
 
-type InitialObjectivesType = ObjectiveType & {
-  id : number
-}
-const db = new Map<number, InitialObjectivesType>()
-let dbIndex = 0;
-const initialObjectives: InitialObjectivesType[] = [
-  {
-    id:dbIndex++,
-    title: "Build Team",
-    keyResults: [
-      {
-        title: "Hire Frontend Developers",
-        initialValue: 0,
-        targetValue: 5,
-        currentValue: 1,
-        metrics: "Developers"
-      },
-      {
-        title: "Hire Backend Developers",
-        initialValue: 0,
-        targetValue: 5,
-        currentValue: 1,
-        metrics: "Developers"
-      }
-    ]
-  },
-  {
-    id:dbIndex++,
-    title: "Sale the Product",
-    keyResults: [
-      {
-        title: "Hire Salesman",
-        initialValue: 0,
-        targetValue: 5,
-        currentValue: 1,
-        metrics: "Developers"
-      }
-    ]
-  }
-]
-
-initialObjectives.forEach((objective: InitialObjectivesType)=>{
-    console.log(db.values())
-  db.set(objective.id, objective);
-})
+const API_URL = "http://localhost:3000/objectives/";
+const KEY_RESULT_URL = "http://localhost:3000/key-result/";
 
 
-function getOKRData():Promise<ObjectiveType[]>{
-  return new Promise((resolve)=>{
-    setTimeout(()=>{
-      resolve(Array.from(db.values()));
-    },3000)
-  })
-}
-
-function insertOKRData(objective:ObjectiveType):Promise<void>{
-  return new Promise((resolve)=>{
-
-    const objectiveToBeAdded:InitialObjectivesType = {
-      id:dbIndex++,
-      title:objective.title,
-      keyResults:objective.keyResults
+async function getOKRData(): Promise<ObjectiveType[]> {
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error("Failed to fetch objectives");
     }
-    setTimeout(()=>{
-      db.set(dbIndex++, objectiveToBeAdded);
-      resolve();
-    },3000)
-    console.log(objectiveToBeAdded);
-  })
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching OKR data:", error);
+    return [];
+  }
 }
 
-export{getOKRData,insertOKRData}
+async function deleteObjectiveFromDb(id: number) {
+  try {
+    const response = await fetch(API_URL + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error("Error deleting OKR data:", error);
+  }
+}
+
+async function insertOKRData(objectiveTitle: string): Promise<any> {
+  try {
+    const newObjective: { "title": string } = {"title": objectiveTitle};
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newObjective),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to insert objective");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error inserting OKR data:", error);
+  }
+}
+
+
+
+async function insertKeyResult(keyResult: KeyResultType, objectiveID: number) {
+  try {
+    const newKeyResult = {
+      title : keyResult.title,
+      initialValue: Number(keyResult.initialValue),
+      currentValue: Number(keyResult.currentValue),
+      targetValue: Number(keyResult.targetValue),
+      metrics : keyResult.metrics,
+      objectiveID: objectiveID,
+    };
+    const response = await fetch(KEY_RESULT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newKeyResult),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to insert objective");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error inserting OKR data:", error);
+  }
+}
+
+async function deleteKeyResultWithId(id: number) {
+  try {
+    const response = await fetch(KEY_RESULT_URL + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to insert objective");
+    }
+  } catch (error) {
+    console.error("Error inserting OKR data:", error);
+  }
+}
+
+export {getOKRData, insertOKRData, deleteObjectiveFromDb, insertKeyResult, deleteKeyResultWithId}

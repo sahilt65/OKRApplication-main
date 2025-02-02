@@ -1,4 +1,5 @@
 export type KeyResultType = {
+  id : number
   title: string;
   initialValue: number;
   currentValue: number;
@@ -6,6 +7,7 @@ export type KeyResultType = {
   metrics: string;
 };
 export type ObjectiveType = {
+  id : number,
   title: string;
-  keyResults: KeyResultType[ ];
+  keyResults: KeyResultType[];
 };

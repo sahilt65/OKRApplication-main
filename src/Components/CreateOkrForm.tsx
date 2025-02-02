@@ -1,10 +1,11 @@
 import {useState} from "react";
 import {KeyResultType, ObjectiveType} from "../Types/OKRTypes.ts";
 import {insertOKRData} from "../OKR-store/OKR-Data.ts";
+import * as React from "react";
 
 type CreateOkrFormProps = {
   objectives: ObjectiveType[]
-  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[]|null>>,
+  setObjectives: React.Dispatch<React.SetStateAction<ObjectiveType[] | null>>,
 }
 
 const CreateOkrForm = ({
@@ -14,18 +15,25 @@ const CreateOkrForm = ({
   const [newObjective, setNewObjective] = useState<string>("");
   const [keyResults, setKeyResults] = useState<KeyResultType[]>([]);
 
-  async function addObjective(){
-    setObjectives([
-      ...objectives,
-      {
-        title: newObjective,
-        keyResults: keyResults,
-      },
-    ]);
-    await insertOKRData({
-      title: newObjective,
-      keyResults: keyResults,
-    })
+  async function addObjective() {
+
+    try {
+      await insertOKRData(newObjective).then((value) => {
+        setObjectives([
+          ...objectives,
+          {
+            id: value.id,
+            title: newObjective,
+            keyResults: keyResults,
+          },
+        ]);
+      });
+
+    } catch (_) {
+      alert("Failed to insert objective");
+    }
+
+
     setKeyResults([]);
   }
 
@@ -36,12 +44,11 @@ const CreateOkrForm = ({
   }
 
 
-
-
   const addKeyResult = () => {
     setKeyResults([
       ...keyResults,
       {
+        id: 1,
         title: "string",
         initialValue: 1,
         currentValue: 1,
@@ -128,13 +135,13 @@ const CreateOkrForm = ({
         </div>
 
         <button
-          className="bg-blue-400 px-2 self-start py-1 rounded-md text-white ring-2  hover:bg-blue-500 mr-6 block"
+          className="bg-blue-500 px-2 self-start py-1 rounded-md text-white   hover:bg-blue-600 mr-6 block"
           onClick={addKeyResult}
         >
           Add Key Result
         </button>
         <button
-          className="bg-blue-400 px-2 self-end py-1 rounded-md text-white ring-2  hover:bg-blue-500"
+          className="bg-blue-500 px-2 self-end py-1 rounded-md text-white  hover:bg-blue-600"
           onClick={addObjective}
         >
           Add Objective
