@@ -101,8 +101,9 @@ export function ShowOKRs({
           </div>
         )}
       </div>
-      <AddKeyResultModal isOpen={isOpen} setObjectives={setObjectives} objective={currentObjective}
-                         objectives={objectives} setIsOpen={setIsOpen}></AddKeyResultModal>
+      {currentObjective && <AddKeyResultModal isOpen={isOpen} setObjectives={setObjectives} objective={currentObjective}
+                                        objectives={objectives} setIsOpen={setIsOpen}></AddKeyResultModal>}
+
     </div>
 
 
