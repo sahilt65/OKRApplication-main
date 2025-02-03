@@ -3,6 +3,7 @@ import {useContext, useState} from "react";
 import {AddKeyResultModal} from "./AddKeyResultModal.tsx";
 import {deleteKeyResultWithId, deleteObjectiveFromDb} from "../OKR-store/OKR-Data.ts";
 import {okrProviderContext} from "../providers/OKRProvider.tsx";
+import {EditObjectiveTitleModal} from "./EditObjectiveTitleModal.tsx";
 
 
 export function ShowOKRs() {
