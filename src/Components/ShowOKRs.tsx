@@ -52,7 +52,7 @@ export function ShowOKRs() {
 
                   <div className="space-x-4">
                     <button
-                      className="px-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white py-1 text-sm"
+                      className="px-2 bg-green-500 hover:bg-green-600 rounded-md text-white py-1 text-sm"
                       onClick={() => {
                         setIsEditObjectiveTitleOpen(true);
                         setCurrentObjective(objective);
