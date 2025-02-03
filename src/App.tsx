@@ -43,13 +43,9 @@ function App() {
       {/*</Routes>*/}
 
       <CreateOkrForm
-        objectives={objectives ?? []}
-        setObjectives={setObjectives}
       />
       {isLoading ? (<p>Loading...</p>) : (
         <ShowOKRs
-          objectives={objectives}
-          setObjectives={setObjectives}
         />)}
 
     </div>
