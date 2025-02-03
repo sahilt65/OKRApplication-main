@@ -7,6 +7,7 @@ import {okrProviderContext} from "../providers/OKRProvider.tsx";
 
 export function ShowOKRs() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isEditObjectiveTitleOpen, setIsEditObjectiveTitleOpen] = useState<boolean>(false);
   const [currentObjective, setCurrentObjective] = useState<ObjectiveType>();
   const {objectives, setObjectives} = useContext(okrProviderContext);
   async function deleteKeyResult(objIndex: number, keyResultIndex: number, id: number) {
@@ -50,6 +51,16 @@ export function ShowOKRs() {
                   </p>
 
                   <div className="space-x-4">
+                    <button
+                      className="px-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white py-1 text-sm"
+                      onClick={() => {
+                        setIsEditObjectiveTitleOpen(true);
+                        setCurrentObjective(objective);
+                      }}
+                    >
+                      Edit Title
+                    </button>
+
                     <button
                       className="px-2 bg-blue-500 hover:bg-blue-600 rounded-md text-white py-1 text-sm"
                       onClick={() => {
@@ -131,6 +142,13 @@ export function ShowOKRs() {
           isOpen={isOpen}
           objective={currentObjective}
           setIsOpen={setIsOpen}
+        />
+      )}
+      {currentObjective && (
+        <EditObjectiveTitleModal
+          isOpen={isEditObjectiveTitleOpen}
+          objective={currentObjective}
+          setIsOpen={setIsEditObjectiveTitleOpen}
         />
       )}
     </div>
