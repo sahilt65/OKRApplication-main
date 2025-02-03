@@ -146,9 +146,9 @@ export function ShowOKRs() {
       )}
       {currentObjective && (
         <EditObjectiveTitleModal
-          isEditObjectiveTitleOpen={isEditObjectiveTitleOpen}
+          isOpen={isEditObjectiveTitleOpen}
           objective={currentObjective}
-          setIsEditObjectiveTitleOpen={setIsEditObjectiveTitleOpen}
+          setIsOpen={setIsEditObjectiveTitleOpen}
         />
       )}
     </div>
