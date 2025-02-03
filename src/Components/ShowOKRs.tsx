@@ -48,7 +48,7 @@ export function ShowOKRs() {
               >
                 <div className="flex border-b-2 px-8  py-2 justify-between">
                   <p className="font-semibold text-xl ">
-                    {index + 1}. {objective.title}
+                    {objective.id }. {objective.title}
                   </p>
 
                   <div className="space-x-4">

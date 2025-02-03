@@ -1,8 +1,8 @@
 import {useState, useEffect, useContext} from "react";
-import {KeyResultType, ObjectiveType} from "../Types/OKRTypes.ts";
+import {ObjectiveType} from "../Types/OKRTypes.ts";
 import * as React from "react";
-import {insertKeyResult} from "../OKR-store/OKR-Data.ts";
 import {okrProviderContext} from "../providers/OKRProvider.tsx";
+import {updateObjectiveTitleFromDb} from "../OKR-store/OKR-Data.ts";
 
 type EditObjectiveTitleModalProps = {
   isOpen: boolean;
@@ -15,7 +15,7 @@ export function EditObjectiveTitleModal({isOpen, objective, setIsOpen}: EditObje
   const {objectives, setObjectives} = useContext(okrProviderContext);
   const [newTitle, setNewTitle] = useState<string>("");
 
-  function updateObjectiveTitle() {
+  async function updateObjectiveTitle() {
     if (objectives != null) {
       objectives.map((obj) => {
         if (obj.id === objective.id) {
@@ -24,17 +24,13 @@ export function EditObjectiveTitleModal({isOpen, objective, setIsOpen}: EditObje
       })
       setObjectives(objectives);
     }
-
+    await updateObjectiveTitleFromDb(objective.id, newTitle);
   }
 
-  // Function to handle Enter (Add Key Result) and Escape (Close Modal)
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = async (event: KeyboardEvent) => {
       if (isOpen) {
-        if (event.key === "Enter") {
-          event.preventDefault(); // Prevents form submission if inside a form
-          setIsOpen(false);
-        } else if (event.key === "Escape") {
+        if (event.key === "Escape") {
           setIsOpen(false);
         }
       }
@@ -44,8 +40,7 @@ export function EditObjectiveTitleModal({isOpen, objective, setIsOpen}: EditObje
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [setIsOpen, isOpen]); // Re-run effect when modal is open
-
+  }, [setIsOpen, isOpen]);
 
 
   return (
@@ -59,14 +54,14 @@ export function EditObjectiveTitleModal({isOpen, objective, setIsOpen}: EditObje
               type="text"
               id="keyresults"
               placeholder="Objective Title"
-              onChange={(e) => setNewTitle( e.target.value)}
+              onChange={(e) => setNewTitle(e.target.value)}
             />
 
             <div className="flex space-x-1 pt-2 justify-end">
               <button
                 className="bg-blue-400 px-2 py-1 rounded-md text-white hover:bg-blue-600 mr-6 block items-end"
-                onClick={() => {
-                  updateObjectiveTitle();
+                onClick={async () => {
+                  await updateObjectiveTitle();
                   setIsOpen(false);
                 }}
               >
