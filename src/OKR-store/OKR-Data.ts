@@ -17,6 +17,8 @@ async function getOKRData(): Promise<ObjectiveType[]> {
   }
 }
 
+
+
 async function deleteObjectiveFromDb(id: number) {
   try {
     const response = await fetch(API_URL + id, {
@@ -41,6 +43,25 @@ async function insertOKRData(objectiveTitle: string): Promise<any> {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newObjective),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to insert objective");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error inserting OKR data:", error);
+  }
+}
+async function updateObjectiveTitle(id : number, title:string){
+  try {
+    const updatedObjective: { "title": string } = {"title": title};
+    const response = await fetch(API_URL + id, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedObjective),
     });
     if (!response.ok) {
       throw new Error("Failed to insert objective");
@@ -96,4 +117,4 @@ async function deleteKeyResultWithId(id: number) {
   }
 }
 
-export {getOKRData, insertOKRData, deleteObjectiveFromDb, insertKeyResult, deleteKeyResultWithId}
+export {getOKRData, insertOKRData, updateObjectiveTitle as updateObjectiveTitleFromDb, deleteObjectiveFromDb, insertKeyResult, deleteKeyResultWithId}
