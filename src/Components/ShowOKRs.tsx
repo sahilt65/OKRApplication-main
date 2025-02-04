@@ -84,8 +84,6 @@ export function ShowOKRs() {
 
                 <div className="px-16 py-4 space-y-2">
                   <div className="font-medium text-lg text-gray-700">Key Results</div>
-
-                  {/* Check if there are Key Results before rendering the table */}
                   {objective.keyResults.length > 0 ? (
                     <div className="overflow-x-auto">
                       <table className="min-w-full text-sm text-left text-gray-700">
@@ -96,7 +94,7 @@ export function ShowOKRs() {
                           <th className="py-2 px-4 border-b">Current Value</th>
                           <th className="py-2 px-4 border-b">Target Value</th>
                           <th className="py-2 px-4 border-b">Metrics</th>
-                          <th className="py-2 px-4 border-b">Actions</th>
+                          <th className="py-2 px-14 border-b">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -108,16 +106,25 @@ export function ShowOKRs() {
                               <td className="py-2 px-4">{keyResult.currentValue}</td>
                               <td className="py-2 px-4">{keyResult.targetValue}</td>
                               <td className="py-2 px-4">{keyResult.metrics}</td>
-                              <td className="py-2 px-4">
-                                <button
-                                  className=" bg-red-500 hover:bg-red-600 rounded-md px-2 text-white"
-                                  onClick={() => {
-                                    deleteKeyResult(index, i, keyResult.id);
-                                  }}
-                                >
-                                  Delete
-                                </button>
+                              <td className="py-2 px-4 space-x-4">
+                                  <button
+                                    className=" bg-blue-500 hover:bg-blue-600 rounded-md px-2 text-white"
+                                    onClick={() => {
+                                    }}
+                                  >
+                                    Update
+                                  </button>
+                                  <button
+                                    className=" bg-red-500 hover:bg-red-600 rounded-md px-2 text-white"
+                                    onClick={() => {
+                                      deleteKeyResult(index, i, keyResult.id);
+                                    }}
+                                  >
+                                    Delete
+                                  </button>
                               </td>
+
+
                             </tr>
                           );
                         })}
