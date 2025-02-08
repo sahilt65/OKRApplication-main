@@ -72,6 +72,12 @@ const CreateOkrForm = () => {
             onChange={(e) => setNewObjective(e.target.value)}
           />
         </div>
+        <button
+          className="bg-blue-500 px-2 self-start py-1 rounded-md text-white   hover:bg-blue-600 mr-6 block"
+
+        >
+          Generate Key Result and Add Objective
+        </button>
         <div className="flex flex-col gap-2">
           <p className="block">Key Results</p>
 
