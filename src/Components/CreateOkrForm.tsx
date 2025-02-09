@@ -2,12 +2,14 @@ import {useContext, useState} from "react";
 import {KeyResultType} from "../Types/OKRTypes.ts";
 import {insertOKRData} from "../OKR-store/OKR-Data.ts";
 import {okrProviderContext} from "../providers/OKRProvider.tsx";
+import {generateKeyResultAndAddObjectives} from "../OKR-store/OKR-Data.ts";
 
 
 const CreateOkrForm = () => {
   const [newObjective, setNewObjective] = useState<string>("");
   const [keyResults, setKeyResults] = useState<KeyResultType[]>([]);
   const {objectives, setObjectives} = useContext(okrProviderContext);
+  const [loading, setLoading] = useState(false);
 
   async function addObjective() {
 
@@ -23,12 +25,24 @@ const CreateOkrForm = () => {
         ]);
       });
 
-    } catch (_) {
-      alert("Failed to insert objective");
+    } catch (err) {
+      alert("Failed to insert objective : " + err);
     }
 
 
     setKeyResults([]);
+  }
+
+  async function  generateKeyResults(){
+    setLoading(true);
+    await generateKeyResultAndAddObjectives(newObjective).then((res) => {
+      const newObjectives = [res, ...objectives!];
+      setObjectives(newObjectives);
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+    });
+    setNewObjective("");
   }
 
   function handleChange(key: string, input: string | number, index: number) {
@@ -69,9 +83,16 @@ const CreateOkrForm = () => {
             type="text"
             id="objective"
             placeholder="Add Objective Title"
+            value={newObjective}
             onChange={(e) => setNewObjective(e.target.value)}
           />
         </div>
+        <button
+          className="bg-blue-500 px-2 self-start py-1 rounded-md text-white   hover:bg-blue-600 mr-6 block"
+          onClick={generateKeyResults}
+        >
+          {loading?"Loading...":"Generate Key Result and Add Objective"}
+        </button>
         <div className="flex flex-col gap-2">
           <p className="block">Key Results</p>
 

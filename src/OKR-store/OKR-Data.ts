@@ -117,4 +117,24 @@ async function deleteKeyResultWithId(id: number) {
   }
 }
 
-export {getOKRData, insertOKRData, updateObjectiveTitle as updateObjectiveTitleFromDb, deleteObjectiveFromDb, insertKeyResult, deleteKeyResultWithId}
+
+const GENERATE_KEY_RESULT_URL = "http://localhost:3000/generate-key-results/"
+async function generateKeyResultAndAddObjectives(objectiveTitle: string){
+  try {
+    const response = await fetch(GENERATE_KEY_RESULT_URL + "?objective=" + objectiveTitle, {
+      method : "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Failed to generate key result and add objectives");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error :", error);
+    return [];
+  }
+}
+
+export {getOKRData, insertOKRData, updateObjectiveTitle as updateObjectiveTitleFromDb, deleteObjectiveFromDb, insertKeyResult, deleteKeyResultWithId, generateKeyResultAndAddObjectives}

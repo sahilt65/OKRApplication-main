@@ -1,16 +1,20 @@
-import {ObjectiveType} from "../Types/OKRTypes.ts";
+import {KeyResultType, ObjectiveType} from "../Types/OKRTypes.ts";
 import {useContext, useState} from "react";
 import {AddKeyResultModal} from "./AddKeyResultModal.tsx";
 import {deleteKeyResultWithId, deleteObjectiveFromDb} from "../OKR-store/OKR-Data.ts";
 import {okrProviderContext} from "../providers/OKRProvider.tsx";
 import {EditObjectiveTitleModal} from "./EditObjectiveTitleModal.tsx";
+import {UpdateKeyResultModal} from "./UpdateKeyResultModal.tsx";
 
 
 export function ShowOKRs() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isEditObjectiveTitleOpen, setIsEditObjectiveTitleOpen] = useState<boolean>(false);
+  const [isUpdateKeyResult, setIsUpdateKeyResult] = useState<boolean>(false);
   const [currentObjective, setCurrentObjective] = useState<ObjectiveType>();
+  const [currentKeyResult, setCurrentKeyResult] = useState<KeyResultType>();
   const {objectives, setObjectives} = useContext(okrProviderContext);
+
   async function deleteKeyResult(objIndex: number, keyResultIndex: number, id: number) {
     const keyResultToDelete = objectives![objIndex].keyResults[keyResultIndex];
     objectives![objIndex].keyResults = objectives![objIndex].keyResults.filter(
@@ -48,7 +52,7 @@ export function ShowOKRs() {
               >
                 <div className="flex border-b-2 px-8  py-2 justify-between">
                   <p className="font-semibold text-xl ">
-                    {objective.id }. {objective.title}
+                    {index+1}. {objective.title}
                   </p>
 
                   <div className="space-x-4">
@@ -84,8 +88,6 @@ export function ShowOKRs() {
 
                 <div className="px-16 py-4 space-y-2">
                   <div className="font-medium text-lg text-gray-700">Key Results</div>
-
-                  {/* Check if there are Key Results before rendering the table */}
                   {objective.keyResults.length > 0 ? (
                     <div className="overflow-x-auto">
                       <table className="min-w-full text-sm text-left text-gray-700">
@@ -96,7 +98,7 @@ export function ShowOKRs() {
                           <th className="py-2 px-4 border-b">Current Value</th>
                           <th className="py-2 px-4 border-b">Target Value</th>
                           <th className="py-2 px-4 border-b">Metrics</th>
-                          <th className="py-2 px-4 border-b">Actions</th>
+                          <th className="py-2 px-14 border-b">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -108,16 +110,30 @@ export function ShowOKRs() {
                               <td className="py-2 px-4">{keyResult.currentValue}</td>
                               <td className="py-2 px-4">{keyResult.targetValue}</td>
                               <td className="py-2 px-4">{keyResult.metrics}</td>
-                              <td className="py-2 px-4">
+                              <td className="py-2 px-4 space-x-4">
+                                <button
+                                  className=" bg-blue-500 hover:bg-blue-600 rounded-md px-2 text-white"
+                                  onClick={() => {
+                                    setCurrentObjective(objective);
+                                    setCurrentKeyResult(keyResult);
+                                    console.log({keyResult})
+                                    setIsUpdateKeyResult(true);
+
+                                  }}
+                                >
+                                  Update
+                                </button>
                                 <button
                                   className=" bg-red-500 hover:bg-red-600 rounded-md px-2 text-white"
                                   onClick={() => {
-                                    deleteKeyResult(index, i, keyResult.id);
+                                    deleteKeyResult(index, i, keyResult.id).then(() =>{});
                                   }}
                                 >
                                   Delete
                                 </button>
                               </td>
+
+
                             </tr>
                           );
                         })}
@@ -150,6 +166,15 @@ export function ShowOKRs() {
           isOpen={isEditObjectiveTitleOpen}
           objective={currentObjective}
           setIsOpen={setIsEditObjectiveTitleOpen}
+        />
+      )}
+      {currentObjective && currentKeyResult && (
+        <UpdateKeyResultModal
+          isOpen={isUpdateKeyResult}
+          setIsOpen={setIsUpdateKeyResult}
+          keyResult={currentKeyResult}
+          objective={currentObjective}
+
         />
       )}
     </div>
